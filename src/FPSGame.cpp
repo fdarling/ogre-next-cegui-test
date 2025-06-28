@@ -146,10 +146,12 @@ FPSGame::FPSGame(SDL_Window *sdlWindow, SDL_GL_Context sdlGLContext) :
     // mWindow = mRoot->initialise(true, "MyFPSGame");
 
     {
+        // https://ogrecave.github.io/ogre-next/api/2.3/class_ogre_1_1_render_system.html
+        // https://ogrecave.github.io/ogre-next/api/3.0/class_ogre_1_1_root.html
         Ogre::NameValuePairList params;
         params["externalWindowHandle"] = std::to_string((unsigned long)(x11Window));
         // params["parentWindowHandle"] = std::to_string((unsigned long)(x11Window)); // optional
-        params["externalGLControl"] = true;
+        params["externalGLControl"] = std::to_string(true);
         params["externalGLContext"] = std::to_string((unsigned long)(sdlGLContext)); // TODO use uintptr_t instead?
 
         int window_width = 0;

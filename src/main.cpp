@@ -24,6 +24,10 @@ static int mainBody(int argc, const char *argv[])
 {
     // create window
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    // SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1); // TODO explore the usefulness of this option
     // SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window(
         SDL_CreateWindow(
@@ -55,7 +59,6 @@ static int mainBody(int argc, const char *argv[])
 #endif // ENABLE_CEGUI_CONTEXT
 
     // create an OpenGL context for OGRE
-    //SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1); // TODO explore the usefulness of this option
 #ifdef ENABLE_OGRE_CONTEXT
     std::unique_ptr<std::remove_pointer<SDL_GLContext>::type, decltype(&SDL_GL_DeleteContext)> ogreContext(SDL_GL_CreateContext(window.get()), SDL_GL_DeleteContext);
     if (!ogreContext)
