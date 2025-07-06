@@ -72,7 +72,7 @@ static int mainBody(int argc, const char *argv[])
     SDL_GL_MakeCurrent(window.get(), ogreContext.get());
 #endif // ENABLE_OGRE_CONTEXT
 #ifdef ENABLE_OGRE_CLASS
-    FPSGame game(window.get(), ogreContext.get());
+    FPSGame game(window.get());
     if (!game.getWindow())
         return EXIT_FAILURE;
 #endif // ENABLE_OGRE_CLASS
@@ -86,6 +86,9 @@ static int mainBody(int argc, const char *argv[])
 
     Uint64 old_ticks = SDL_GetTicks64();
 
+    bool showingGui = true;
+    int guiMouseX = 0, guiMouseY = 0;
+    SDL_ShowCursor(SDL_DISABLE); // TODO maybe move this further up?
     while (
 #ifdef ENABLE_OGRE_CLASS
         !game.getQuit() &&
@@ -113,12 +116,32 @@ static int mainBody(int argc, const char *argv[])
 #endif // ENABLE_CEGUI_CLASS
             !SDL_QuitRequested())
         {
-#ifdef ENABLE_OGRE_CLASS
-            // game.handleEvent(event);
-#endif // ENABLE_OGRE_CLASS
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_TAB)
+            {
+                if (showingGui)
+                {
+                    SDL_GetMouseState(&guiMouseX, &guiMouseY);
+                }
+                showingGui = !showingGui;
+                SDL_SetRelativeMouseMode(!showingGui ? SDL_TRUE : SDL_FALSE);
+                if (showingGui)
+                {
+                    // SDL_ShowCursor(SDL_DISABLE);
+                    SDL_WarpMouseInWindow(window.get(), guiMouseX, guiMouseY);
+                }
+            }
 #ifdef ENABLE_CEGUI_CLASS
-            gui.handleEvent(event);
+            else if (showingGui)
+            {
+                gui.handleEvent(event);
+            }
+            else
 #endif // ENABLE_CEGUI_CLASS
+            {
+#ifdef ENABLE_OGRE_CLASS
+                game.handleEvent(event);
+#endif // ENABLE_OGRE_CLASS
+            }
         }
 
 #ifdef ENABLE_OGRE_CLASS
@@ -137,12 +160,15 @@ static int mainBody(int argc, const char *argv[])
 #ifdef ENABLE_OGRE_CLASS
         game.draw();
 #endif // ENABLE_OGRE_CLASS
+        if (showingGui)
+        {
 #ifdef ENABLE_CEGUI_CONTEXT
-        SDL_GL_MakeCurrent(window.get(), ceguiContext.get());
+            SDL_GL_MakeCurrent(window.get(), ceguiContext.get());
 #endif // ENABLE_CEGUI_CONTEXT
 #ifdef ENABLE_CEGUI_CLASS
-        gui.draw();
+            gui.draw();
 #endif // ENABLE_CEGUI_CLASS
+        }
         SDL_GL_SwapWindow(window.get());
     }
 

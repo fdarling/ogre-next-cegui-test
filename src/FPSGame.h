@@ -16,12 +16,11 @@ class Camera;
 // forward declaration to avoid including <SDL.h>
 typedef struct SDL_Window SDL_Window;
 typedef union SDL_Event SDL_Event;
-typedef void * SDL_GL_Context;
 
 class FPSGame
 {
 public:
-    FPSGame(SDL_Window *sdlWindow, SDL_GL_Context sdlGLContext);
+    FPSGame(SDL_Window *sdlWindow);
     ~FPSGame();
     Ogre::Window * getWindow() {return mWindow;}
     void handleEvent(const SDL_Event &event);

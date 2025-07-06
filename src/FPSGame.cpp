@@ -105,7 +105,7 @@ static void registerHlms()
     }
 }
 
-FPSGame::FPSGame(SDL_Window *sdlWindow, SDL_GL_Context sdlGLContext) :
+FPSGame::FPSGame(SDL_Window *sdlWindow) :
     mSDLWindow(sdlWindow),
     mWindow(nullptr),
     mSceneManager(nullptr),
